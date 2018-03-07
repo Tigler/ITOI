@@ -14,19 +14,19 @@ public:
 
     void startLab2(const char* path);
 
-    void startLab3();
+    void startLab3(const char* path);
 
-    void startLab4();
+    void startLab4(const char* path);
 
-    void startLab5();
+    void startLab5(const char* path);
 
-    void startLab6();
+    void startLab6(const char* path);
 
-    void startLab7();
+    void startLab7(const char* path);
 
-    void startLab8();
+    void startLab8(const char* path);
 
-    void startLab9();
+    void startLab9(const char* path);
 };
 
 

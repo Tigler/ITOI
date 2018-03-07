@@ -5,44 +5,34 @@
 #ifndef ITOI_COMMON_H
 #define ITOI_COMMON_H
 
+#include <vector>
 #include "memory"
-#include "../Core/Core.h"
+#include "../Kernel/Kernel.h"
 
 class Image {
-public:
-    struct PyramidStruct {
-        int octave;
-        double sigma;
-        double scale;
-
-        PyramidStruct(){}
-
-        PyramidStruct(int octave, double sigma, double scale) {
-            this->octave = octave;
-            this->sigma = sigma;
-            this->scale = scale;
-        }
-    };
-
-private:
     unsigned int width;
     unsigned int height;
-    double *image;
-    PyramidStruct pyramidStruct;
+    std::vector<double> image;
 public:
+    Image() = default;
+
+    Image &operator=(const Image&)= default;
+
+    Image(Image &&) = default;
+
+    Image(Image &image);
+
     Image(unsigned int w, unsigned int h);
 
-    std::unique_ptr<Image> convolution(const Core &k) const;
+    Image convolution(const Kernel &k) const;
 
-    std::unique_ptr<Image> sobel();
+    Image sobel();
 
     void setValByXY(const int x, const int y, const double c);
 
     double getValByXY(const int x, const int y) const;
 
-    Image dif(const Image & a, const Image & b, int width, int height);
-
-    std::unique_ptr<Image> small2();
+    Image small2();
 
     unsigned int getWidth() const;
 
@@ -52,11 +42,11 @@ public:
 
     void setHeight(unsigned int height);
 
-    double *getImage() const;
+    void setImageItem(const int i, const double item);
 
-    const PyramidStruct &getPyramidStruct() const;
+    double getImageItem(const int i);
 
-    void setPyramidStruct(const PyramidStruct &pyramidStruct);
+    static double ownValue(const Image &imgX, const Image &imgY, int x0, int y0, int width, int height);
 
     ~Image();
 };

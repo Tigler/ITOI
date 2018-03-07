@@ -9,8 +9,10 @@
 #include "../Image/Image.h"
 
 class ImageReader {
-public:ImageReader();
-public: Image* read(const char* path);
+public:
+    ImageReader();
+
+    Image read(const char *path);
 };
 
 

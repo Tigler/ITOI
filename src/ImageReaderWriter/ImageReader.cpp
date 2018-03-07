@@ -6,17 +6,15 @@
 #include <algorithm>
 #include "ImageReader.h"
 #include "jpeglib.h"
-#include "../Image/Image.h"
 #include <iostream>
-#include "memory"
+
 
 
 static double brightness(unsigned char r, unsigned char g, unsigned char b){
-    //return 0.3*r+0.59*g+0.11*b;
-    return (r+g+b)/3;
+    return 0.3*r+0.59*g+0.11*b;
 }
 
-Image* ImageReader::read(const char* path) {
+Image ImageReader::read(const char* path) {
 
     FILE *file = fopen(path, "rb");
     if (file == NULL) {
@@ -42,14 +40,14 @@ Image* ImageReader::read(const char* path) {
 
     unsigned char *data = (unsigned char *) malloc(dataSize);
     unsigned char *rowptr;
-    Image *image = new Image(w,h);
-    image->setWidth(w);
-    image->setHeight(h);
+    Image image = Image(w,h);
+    image.setWidth(w);
+    image.setHeight(h);
     for (int i = 0; i < h; i++) {
-        rowptr = data + info.output_scanline * w * numChannels; //
+        rowptr = data + info.output_scanline * w * numChannels;
         jpeg_read_scanlines(&info, &rowptr, 1);
         for (int j = 0; j < w*3; j+=3) {
-            image->getImage()[i*w+(j==0?0:j/3)] =  brightness(rowptr[j],rowptr[j+1],rowptr[j+2]);
+            image.setImageItem(i*w+(j==0?0:j/3), brightness(rowptr[j],rowptr[j+1],rowptr[j+2]));
         }
     }
 
