@@ -34,9 +34,9 @@ void InterestPoints::moravek(const Image &img, int count, int r, double threshol
                     }
                 }
             }
-            auto min = std::min(skr[0], skr[8]);
-            if(min>threshold){
-                angles.emplace_back(i, j,min);
+            auto min = std::min_element(&skr[0], &skr[8]);
+            if(*min>threshold){
+                angles.emplace_back(i, j,*min);
             }
         }
     }

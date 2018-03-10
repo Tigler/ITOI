@@ -110,8 +110,8 @@ Image Image::small2() {
         for (int j = 0; j < height / 2; j++) {
             double sum = 0;
             sum += image[2 * i + 2 * j * width];
-            sum += image[2 * i + 2 * j * width];
-            sum += image[2 * i + 1 + (2 * j + 1) * width];
+            sum += image[2 * i + 1 + 2 * j * width];
+            sum += image[2 * i  + (2 * j + 1) * width];
             sum += image[2 * i + 1 + (2 * j + 1) * width];
             sum /= 4;
             result.image[i + j * (width / 2)] = sum;
@@ -131,8 +131,8 @@ double Image::ownValue(const Image &imgX, const Image &imgY, int x0, int y0, int
             C += iY * iY;
         }
     }
-    double descr = sqrt(pow(A - C, 2) + 4 * B * B);
-    return std::min(abs((A + C - descr) / 2), abs((A + C + descr) / 2));;
+    double descr = sqrt(pow(B, 2) + 4 * A * C);
+    return std::min(abs((B - descr) / 2), abs((B + descr) / 2));;
 }
 
 void Image::setImageItem(const int i, const double item) {
