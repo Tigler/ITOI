@@ -25,21 +25,21 @@ double Image::getValByXY(const int x, const int y) const {
         } else if (y < height) {
             return getValByXY(-x, y);
         } else {
-            return getValByXY(-x, 2 * height - y - 2);
+            return getValByXY(-x, 2 * height - y - 1);
         }
     } else if (x < width) {
         if (y < 0) {
             return getValByXY(x, -y);
         } else {
-            return getValByXY(x, 2 * height - y - 2);
+            return getValByXY(x, 2 * height - y - 1);
         }
     } else {
         if (y < 0) {
-            return getValByXY(2 * width - x - 2, -y);
+            return getValByXY(2 * width - x - 1, -y);
         } else if (y < height) {
-            return getValByXY(2 * width - x - 2, y);
+            return getValByXY(2 * width - x - 1, y);
         } else {
-            return getValByXY(2 * width - x - 2, 2 * height - y - 2);
+            return getValByXY(2 * width - x - 1, 2 * height - y - 1);
         }
     }
 }
@@ -118,21 +118,6 @@ Image Image::small2() {
         }
     }
     return result;
-}
-
-double Image::ownValue(const Image &imgX, const Image &imgY, int x0, int y0, int width, int height) {
-    double A = 0, B = 0, C = 0;
-    for (int i = x0; i < x0 + width; i++) {
-        for (int j = y0; j < y0 + height; j++) {
-            double iX = imgX.getValByXY(i, j);
-            double iY = imgY.getValByXY(i, j);
-            A += iX * iX;
-            B += iX * iY;
-            C += iY * iY;
-        }
-    }
-    double descr = sqrt(pow(B, 2) + 4 * A * C);
-    return std::min(abs((B - descr) / 2), abs((B + descr) / 2));;
 }
 
 void Image::setImageItem(const int i, const double item) {

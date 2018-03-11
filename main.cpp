@@ -35,7 +35,7 @@ int main(int argc, char *argv[]) {
         std::cout << "Lab2 complete..." << std::endl;
     }
     if(strcmp(lab,"3")==0){
-        application.startLab3("/home/tigler/picture4.jpg");
+        application.startLab3("/home/tigler/picture5.jpg");
         std::cout << "Lab3 complete..." << std::endl;
     }
 

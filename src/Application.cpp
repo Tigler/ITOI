@@ -60,12 +60,12 @@ void Application::startLab3(const char* path) {
     auto image = imageReader.read(path);
 
     auto interestPoints = InterestPoints();
+//
+//    interestPoints.moravek(image, 100, 2, 50);
+//    imageWriter.writeWithPoints("./result/morawekk.jpg",image,interestPoints.getPoints());
 
-    interestPoints.moravek(image, 100, 2, 15);
-    imageWriter.writeWithPoints("./result/morawek.jpg",image,interestPoints.getPoints());
-
-    interestPoints.clearData();
-
+//    interestPoints.clearData();
+//
     interestPoints.harris(image, 100, 2, 15000);
     imageWriter.writeWithPoints("./result/harris.jpg",image,interestPoints.getPoints());
 }
