@@ -20,7 +20,7 @@ int main(int argc, char *argv[]) {
     }
 
     lab = lab == nullptr ? "3" : lab;  //номер лабораторной
-    sg = sg == nullptr ? "5" : sg;
+    sg = sg == nullptr ? "2" : sg;
     if(path== nullptr){
         std::cout << "path not set" << std::endl;
     }

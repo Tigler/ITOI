@@ -38,6 +38,10 @@ public:
 
     void setItem(int i, double value);
 
+    void setWidth(const int width){this->width = width;}
+
+    void setHeight(const int height){this->height = height;}
+
     int getWidth() const;
 
     int getHeight() const;

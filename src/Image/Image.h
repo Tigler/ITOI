@@ -20,7 +20,7 @@ public:
 
     Image(Image &&) = default;
 
-    Image(Image &image);
+    Image(const Image &image);
 
     Image(unsigned int w, unsigned int h);
 
@@ -30,9 +30,9 @@ public:
 
     void setValByXY(const int x, const int y, const double c);
 
-    double getValByXY(const int x, const int y) const;
+    Image doubleReduce();
 
-    Image small2();
+    Image separab(const Kernel &k);
 
     unsigned int getWidth() const;
 
@@ -46,7 +46,13 @@ public:
 
     double getImageItem(const int i);
 
-    static double ownValue(const Image &imgX, const Image &imgY, int x0, int y0, int width, int height);
+    double getValRepeat(int x, int y) const;
+
+    double getValMirror(int x, int y) const;
+
+    double getValWrapp(int x, int y) const;
+
+    double getValBlack(int x, int y) const;
 
     ~Image();
 };

@@ -112,7 +112,7 @@ void ImageWriter::writeWithPoints(const char *path, Image image, std::vector<Poi
     }
 
     jpeg_finish_compress(&cinfo);
-    fclose(outfile);
+    //fclose(outfile);
     jpeg_destroy_compress(&cinfo);
 }
 
