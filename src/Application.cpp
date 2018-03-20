@@ -3,9 +3,11 @@
 //
 
 #include <cstring>
+#include <cmath>
 #include "Application.h"
 #include "ImageReaderWriter/ImageReader.h"
 #include "ImageReaderWriter/ImageWriter.h"
+#include "DescriptorFinder.h"
 
 Application::Application() = default;
 
@@ -27,17 +29,17 @@ void Application::startLab2(const char* path) {
     auto image = imageReader.read(path);
 
     auto pyramid = Pyramid();
-    pyramid.create(image,5,1.6);
+    pyramid.create(image,5,4,0.5,1.3);
 
-    auto count = pyramid.getImages().size();
+    auto count = pyramid.getCount();
 
     int i = 0;
     while (i< count) {
-        std::string octave = std::to_string(pyramid.getPyramidInfo()[i].octave);
+        std::string octave = std::to_string(pyramid.getOctave(i));
         char const *oct = octave.c_str();
 
-        std::string scale = std::to_string(pyramid.getPyramidInfo()[i].scale);
-        char const *sc = scale.c_str();
+        std::string sigma = std::to_string(pyramid.getSigma(i));
+        char const *sc = sigma.c_str();
 
         char result[100];
         strcpy(result,"./result/pyramid");
@@ -60,18 +62,32 @@ void Application::startLab3(const char* path) {
     auto image = imageReader.read(path);
 
     auto interestPoints = InterestPoints();
-//
-//    interestPoints.moravek(image, 100, 2, 50);
-//    imageWriter.writeWithPoints("./result/morawekk.jpg",image,interestPoints.getPoints());
 
-//    interestPoints.clearData();
-//
-    interestPoints.harris(image, 100, 2, 15000);
+    interestPoints.moravek(image, 100, 2, 0.1);
+    imageWriter.writeWithPoints("./result/morawekk.jpg",image,interestPoints.getPoints());
+
+    interestPoints.clearData();
+
+    interestPoints.harris(image, 100, 2, 0.1);
     imageWriter.writeWithPoints("./result/harris.jpg",image,interestPoints.getPoints());
 }
 
 void Application::startLab4(const char* path) {
+    auto imageWriter = ImageWriter();
+    auto imageReader = ImageReader();
 
+    auto image = imageReader.read(path);
+
+    auto image2 = imageReader.read(path);
+
+    image2 = Image::cutTop(image2,20);
+
+    DescriptorFinder descriptorFinder = DescriptorFinder();
+
+    std::vector<std::pair<Point,Point>> pointPairs = descriptorFinder.getSimilarPoints(image,image2,20);
+
+
+    imageWriter.writeWithRelationPoints("./result/mergeImages.jpg",image,image2,pointPairs);
 }
 
 void Application::startLab5(const char* path) {

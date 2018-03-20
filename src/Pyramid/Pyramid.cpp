@@ -5,37 +5,22 @@
 #include "Pyramid.h"
 #include <cmath>
 
-void Pyramid::create(Image img, const int scales, const double sigma) {
-    Kernel cr = Kernel::gauss(sigma);
-    Image p = img.convolution(cr);
-    p = p.convolution(cr);
-    images.clear();
-    double octave = 1;
-    while (p.getWidth() >= 2 && p.getHeight() >= 2) {
-        double sigmaCur = sigma;
-        double interval = pow(2, 1.0 / scales);
-        Image p1;
-        for (int i = 0;i < scales;i++) {
+void Pyramid::create(const Image &img, const int countOctaves, const int scales, const double sigmaA, const double sigma0) {
+    this->clear();
+    Image image = Image(img).separab(Kernel::gauss(sqrt(sigma0 * sigma0 - sigmaA * sigmaA)));;
+    double interval = pow(2, 1.0/scales);
+    double octave = countOctaves;
+    while ((image.getWidth() >= 2 && image.getHeight() >= 2) && octave > 0) {
+        double sigmaCur = sigma0;
+        for (int i = 0; i < scales; i++) {
             double sigmaPrev = sigmaCur;
-            sigmaCur *= sigma * pow(interval,i+1);
-            double deltaSigma = sqrt(sigmaCur * sigmaCur - sigmaPrev * sigmaPrev);
-            Kernel cr1 = Kernel::gauss(deltaSigma);
-            p1 = p.convolution(cr1);
-            pyramidInfo.emplace_back(octave,sigma, sigmaCur);
-            images.emplace_back(p1);
+            sigmaCur = sigma0 * pow(interval, i);
+            image = image.separab(Kernel::gauss(sqrt(sigmaCur * sigmaCur - sigmaPrev * sigmaPrev)));
+            pyramidInfo.emplace_back(image, countOctaves - octave, sigmaCur, i);
         }
-        p = p1.small2();
-        octave++;
+        image = image.doubleReduce();
+        octave--;
     }
 }
-
-const std::vector<Image> &Pyramid::getImages() const {
-    return images;
-}
-
-const std::vector<Pyramid::PyramidStruct> &Pyramid::getPyramidInfo() const {
-    return pyramidInfo;
-}
-
 
 Pyramid::Pyramid() = default;

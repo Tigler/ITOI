@@ -15,35 +15,36 @@ public:
         int octave;
         double sigma;
         double scale;
+        Image image;
 
         PyramidStruct() = default;
 
-        PyramidStruct(int octave, double sigma, double scale) {
+        PyramidStruct(Image &image,int octave, double sigma, double scale) {
             this->octave = octave;
             this->sigma = sigma;
             this->scale = scale;
+            this->image = image;
         }
     };
 
 private:
-    std::vector<Image> images;
     std::vector<PyramidStruct> pyramidInfo;
 public:
     Pyramid();
 
-    Image getImage(int i) { return images[i]; }
+    void create(const Image &img, const int countOctaves, const int scales, const double sigmaA, const double sigma0);
 
-    int getCount() const{ return images.size(); }
+    double getCount() const{ return pyramidInfo.size(); }
 
-    void create(Image img, const int scales, const double sigmaS = 1);
+    double getScale(const int i) const{ return pyramidInfo[i].scale; }
 
-    const std::vector<Image> &getImages() const;
+    double getSigma(const int i) const{ return pyramidInfo[i].sigma; }
 
-    const std::vector<PyramidStruct> &getPyramidInfo() const;
+    double getOctave(const int i) const{ return pyramidInfo[i].octave; }
 
-    bool isExtremum(int x, int y, int z);
+    void clear(){   pyramidInfo.clear();}
 
-    double getScale(int i) { return pyramidInfo[i].scale; }
+    Image getImage(const int i) { return pyramidInfo[i].image; }
 };
 
 

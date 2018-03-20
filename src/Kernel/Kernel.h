@@ -30,13 +30,17 @@ public:
 
     static Kernel sobelY();
 
-    static Kernel gauss(double sigma);
+    static Kernel gauss(double sigma) ;
 
     static Kernel gauss(double sigma, int R);
 
     double getItem(int i) const;
 
     void setItem(int i, double value);
+
+    void setWidth(const int width){this->width = width;}
+
+    void setHeight(const int height){this->height = height;}
 
     int getWidth() const;
 

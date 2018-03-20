@@ -36,19 +36,17 @@ Kernel Kernel::sobelY() {
 }
 
 Kernel Kernel::gauss(const double sigma, const int r) {
-    auto cr = Kernel(r, r);
-    double doubleSigma = 2 * sigma * sigma;
-    double koef = 1 / sqrt(6.28) * sigma;
+    auto gauss = Kernel(r, r);
     double sum = 0;
     int R = r * r;
     for (int i = 0; i < R; i++) {
-        cr.kernel[i] = koef * exp(-(pow(i - (R / 2), 2)) / doubleSigma);
-        sum += cr.kernel[i];
+        gauss.kernel[i] = (1 / (sqrt(2 * M_PI) * sigma)) * exp(-(pow(i - (R / 2), 2)) / (2 * sigma * sigma));
+        sum += gauss.kernel[i];
     }
     for (int i = 0; i < R; i++) {
-        cr.setItem(i, cr.getItem(i) / sum);
+        gauss.setItem(i, gauss.getItem(i) / sum);
     }
-    return cr;
+    return gauss;
 }
 
 int Kernel::getWidth() const {
@@ -68,8 +66,7 @@ void Kernel::setItem(int i, double value) {
 }
 
 Kernel Kernel::gauss(double sigma) {
-    int r = static_cast<int>(6 * sigma);
-    return gauss(sigma, r);
+    return gauss(sigma, 6 * sigma);
 }
 
 Kernel::Kernel(Kernel &kernel) {
