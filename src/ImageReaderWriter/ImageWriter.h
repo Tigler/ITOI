@@ -16,6 +16,8 @@ public:
     void write(const char* path,Image image);
 
     void writeWithPoints(const char* path,Image image,std::vector<Point> points);
+
+    void writeWithRelationPoints(const char *path, Image imageLeft,Image imageRight, std::vector<std::pair<Point,Point>> pointPairs);
 };
 
 

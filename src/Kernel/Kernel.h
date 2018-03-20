@@ -30,7 +30,7 @@ public:
 
     static Kernel sobelY();
 
-    static Kernel gauss(double sigma);
+    static Kernel gauss(double sigma) ;
 
     static Kernel gauss(double sigma, int R);
 

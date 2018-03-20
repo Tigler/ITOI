@@ -32,7 +32,11 @@ public:
 
     Image doubleReduce();
 
-    Image separab(const Kernel &k);
+    static Image mergeImages(const Image &imageLeft, const Image &imageRight);
+
+    static Image cutTop(const Image &image, int countRow);
+
+    Image separab(const Kernel &k)const;
 
     unsigned int getWidth() const;
 

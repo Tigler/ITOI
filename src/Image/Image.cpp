@@ -86,6 +86,35 @@ Image Image::sobel() {
     return resultImage;
 }
 
+Image Image::mergeImages(const Image &imageLeft, const Image &imageRight) {
+    int height = imageLeft.getHeight() >= imageRight.getHeight() ? imageRight.getHeight() : imageLeft.getHeight();
+    int commonWidth = imageLeft.getWidth() + imageRight.getWidth();
+
+    auto result = Image(commonWidth, height);
+    for (int i = 0; i < height; i++) {
+        for (int j = 0; j < commonWidth; j++) {
+            if(j<imageLeft.getWidth()){
+                result.setValByXY(j,i,imageLeft.getValBlack(j,i));
+            }else {
+                result.setValByXY(j, i, imageRight.getValBlack(j-imageLeft.getWidth(), i));
+            }
+        }
+    }
+
+    return result;
+}
+
+Image Image::cutTop(const Image &image, int countRow) {
+    Image result = Image(image.getWidth(),(image.getHeight()-countRow));
+    for(int i=0;i<image.getHeight()-countRow;i++){
+        for(int j=0;j<image.getWidth();j++){
+            result.setValByXY(j,i,image.getValBlack(j,i+countRow));
+        }
+    }
+    return result;
+}
+
+
 unsigned int Image::getWidth() const {
     return width;
 }
@@ -131,13 +160,13 @@ Image::Image(const Image &image) {
     this->image = image.image;
 }
 
-Image Image::separab(const Kernel &k) {
+Image Image::separab(const Kernel &k)const {
     Kernel kernel = Kernel(k);
     Image result = this->convolution(kernel);
     kernel.setWidth(kernel.getHeight());
     int w = kernel.getWidth();
     kernel.setHeight(w);
-    result.convolution(kernel);
+    result = result.convolution(kernel);
     return result;
 }
 

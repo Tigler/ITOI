@@ -52,6 +52,8 @@ public:
 
     const std::vector<Point> &getPoints() const;
 
+    std::vector<Point> locMax(const std::vector<Point> points);
+
     void clearData();
 
 private:
