@@ -64,8 +64,8 @@ DescriptorFinder::findDescriptors(const std::vector<Point> interestPoints, const
                 double mainPhi = (int)(anglMain / part) * part + (part/2);
                 double neighborPhi = (int)(anglNeighbor / part) * part + (part/2);
 
-                double mainValue = (abs(sqrt(anglMain * anglMain + mainPhi*mainPhi))) * valGrad;
-                double neighborValue = (abs(sqrt(anglNeighbor * anglNeighbor + neighborPhi*neighborPhi))) * valGrad;
+                double mainValue = abs(sqrt(anglMain * anglMain + mainPhi*mainPhi)) * valGrad;
+                double neighborValue = abs(sqrt(anglNeighbor * anglNeighbor + neighborPhi*neighborPhi)) * valGrad;
 
 
                 int mainIdx = (int)(anglMain / part)*(j+r)/(r/barChars);
