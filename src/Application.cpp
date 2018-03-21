@@ -63,12 +63,12 @@ void Application::startLab3(const char* path) {
 
     auto interestPoints = InterestPoints();
 
-    interestPoints.moravek(image, 100, 2, 0.1);
+    interestPoints.moravek(image, 100, 2, 1000);
     imageWriter.writeWithPoints("./result/morawekk.jpg",image,interestPoints.getPoints());
 
     interestPoints.clearData();
 
-    interestPoints.harris(image, 100, 2, 0.1);
+    interestPoints.harris(image, 100, 2, 115557500000);//
     imageWriter.writeWithPoints("./result/harris.jpg",image,interestPoints.getPoints());
 }
 
@@ -84,7 +84,7 @@ void Application::startLab4(const char* path) {
 
     DescriptorFinder descriptorFinder = DescriptorFinder();
 
-    std::vector<std::pair<Point,Point>> pointPairs = descriptorFinder.getSimilarPoints(image,image2,20);
+    std::vector<std::pair<Point,Point>> pointPairs = descriptorFinder.getSimilarPoints(image,image2,40);
 
 
     imageWriter.writeWithRelationPoints("./result/mergeImages.jpg",image,image2,pointPairs);

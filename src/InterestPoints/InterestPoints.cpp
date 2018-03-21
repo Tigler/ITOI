@@ -15,7 +15,6 @@ void InterestPoints::moravek(const Image &img, int count, int r, double threshol
     int height = img.getHeight();
     std::vector<Point> angles;
 
-    double minVal, maxVal;
     for (int i = 0; i < width; i++) {
         for (int j = 0; j < height; j++) {
             double skr[] = {0, 0, 0, 0, 0, 0, 0, 0, 0};
@@ -36,20 +35,15 @@ void InterestPoints::moravek(const Image &img, int count, int r, double threshol
             }
             skr[4] = std::numeric_limits<double>::max();
             auto min = *std::min_element(std::begin(skr), std::end(skr));
-            if (min < minVal) minVal = min;
-            if (min > maxVal) maxVal = min;
             angles.emplace_back(i, j, min);
         }
     }
-    double dist = maxVal - minVal;
     std::vector<Point> anglesNorm;
     for (int i = 0; i < angles.size(); i++) {
-        angles[i].intensity = (angles[i].intensity - minVal) / dist;
         if (angles[i].intensity > threshold) {
             anglesNorm.push_back(angles[i]);
         }
     }
-    anglesNorm = locMax(anglesNorm);
     filterANMS(anglesNorm, count);
 }
 
@@ -62,7 +56,6 @@ void InterestPoints::harris(const Image &image, int count, int r, double thresho
     int height = image.getHeight();
     std::vector<Point> angles;
     double A, B, C;
-    double minVal, maxVal;
     for (int i = 0; i < width; i++) {
         for (int j = 0; j < height; j++) {
             A = B = C = 0;
@@ -75,23 +68,17 @@ void InterestPoints::harris(const Image &image, int count, int r, double thresho
             }
             double val =
                     ((A * C - (B * B)) - (0.04 * ((A + C) * (A + C)))); //определитель-[0.04,0.06]*след^2
-            if(val>0) {
-                if (val < minVal) minVal = val;
-                if (val > maxVal) maxVal = val;
                 angles.emplace_back(i, j, val);
-            }
         }
     }
 
-    double dist = maxVal - minVal;
     std::vector<Point> anglesNorm;
     for (int i = 0; i < angles.size(); i++) {
-        angles[i].intensity = (angles[i].intensity - minVal) / dist;
         if (angles[i].intensity > threshold) {
             anglesNorm.push_back(angles[i]);
         }
     }
-    anglesNorm = locMax(anglesNorm);
+    anglesNorm = locMax(image,imgX,imgY,anglesNorm);
     filterANMS(anglesNorm, count);
 }
 
@@ -128,23 +115,43 @@ void InterestPoints::clearData() {
     points.clear();
 }
 
-std::vector<Point> InterestPoints::locMax(const std::vector<Point> points){
-    int r = 3;
+bool isFirstMax(int a, int b, int c){
+    if(a>b && a>c){
+        return true;
+    }
+    return 0;
+}
+
+std::vector<Point> InterestPoints::locMax(Image image,Image imageX,Image imageY,const std::vector<Point> points){
     std::vector<Point> result;
     for (auto point : points) {
-        bool f = false;
-        for (auto &res : result) {
-            double distX = point.x - res.x;
-            double distY = point.y - res.y;
-            double curDist = sqrt(distX * distX + distY * distY);
-            if(point.intensity > res.intensity && curDist < r){
-                res = point;
-                f = true;
-                break;
+        double valX = imageX.getValBlack(point.x, point.y);
+        double valY = imageY.getValBlack(point.x, point.y);
+        int angl = 180.0*atan2(valY, valX)/M_PI;
+
+        if(angl>=0&&angl<45) {
+            if (!isFirstMax(image.getValBlack(point.x, point.y), image.getValBlack(point.x, point.y + 1),
+                            image.getValBlack(point.x, point.y - 1))) {
+                result.push_back(point);
             }
         }
-        if(!f){
-            result.push_back(point);
+        if(angl>=45&&angl<90) {
+            if (!isFirstMax(image.getValBlack(point.x, point.y), image.getValBlack(point.x + 1, point.y + 1),
+                            image.getValBlack(point.x - 1, point.y - 1))) {
+                result.push_back(point);
+            }
+        }
+        if(angl>=90&&angl<135) {
+            if (!isFirstMax(image.getValBlack(point.x, point.y), image.getValBlack(point.x + 1, point.y),
+                            image.getValBlack(point.x - 1, point.y))) {
+                result.push_back(point);
+            }
+        }
+        if(angl>=135) {
+            if (!isFirstMax(image.getValBlack(point.x, point.y), image.getValBlack(point.x - 1, point.y + 1),
+                            image.getValBlack(point.x + 1, point.y - 1))) {
+                result.push_back(point);
+            }
         }
     }
     return result;

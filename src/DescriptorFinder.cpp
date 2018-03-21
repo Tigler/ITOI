@@ -58,8 +58,8 @@ DescriptorFinder::findDescriptors(const std::vector<Point> interestPoints, const
                 double valY = imgY.getValBlack(ip.x + j, ip.y + k);
 
                 double valGrad = sqrt(valX * valX + valY * valY);
-                double anglMain = 1.0 / tan(valY / valX);
-                double anglNeighbor = (anglMain-((anglMain/part)*part))<(part/2)?part-anglMain:part+anglMain;
+                double anglMain = atan2(valY , valX);
+                double anglNeighbor = (anglMain-(((int)(anglMain/part))*part))<(part/2)?part-anglMain:part+anglMain;
 
                 double mainPhi = (int)(anglMain / part) * part + (part/2);
                 double neighborPhi = (int)(anglNeighbor / part) * part + (part/2);
@@ -95,26 +95,27 @@ DescriptorFinder::findDescriptors(const std::vector<Point> interestPoints, const
 std::vector<std::pair<Point, Point>> DescriptorFinder::getSimilarPoints(Image &first, Image &second,int count) {
     auto interestPoints = InterestPoints();
 
-    interestPoints.moravek(first, count, 4, 0.1);
+    interestPoints.moravek(first, count, 4, 1000);
     std::vector<Point> firstIps = interestPoints.getPoints();
 
     interestPoints.clearData();
 
-    interestPoints.moravek(second, count, 4, 0.1);
+    interestPoints.moravek(second, count, 4, 1000);
     std::vector<Point> secondIps = interestPoints.getPoints();
 
     std::vector<std::vector<double>> firstDescriptors = this->findDescriptors(firstIps, first);
 
     std::vector<std::vector<double>> secondDescriptors = this->findDescriptors(secondIps, second);
 
-    return this->findSimilar(firstIps, secondIps, firstDescriptors, secondDescriptors, 12);
+    return this->findSimilar(firstIps, secondIps, firstDescriptors, secondDescriptors, count);
 }
 
 std::vector<double> DescriptorFinder::normalize(std::vector<double> descriptor) {
     double sum = 0;
     for (double &item : descriptor) {
-        sum += item;
+        sum += item*item;
     }
+    sum=sqrt(sum);
     for (double &item : descriptor) {
         item = item / sum;
     }
