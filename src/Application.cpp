@@ -8,6 +8,7 @@
 #include "ImageReaderWriter/ImageReader.h"
 #include "ImageReaderWriter/ImageWriter.h"
 #include "DescriptorFinder.h"
+#include "Course/SimilarImagesFinder.h"
 
 Application::Application() = default;
 
@@ -61,6 +62,8 @@ void Application::startLab3(const char* path) {
 
     auto image = imageReader.read(path);
 
+    image = Image::rotate(image);
+
     auto interestPoints = InterestPoints();
 
     interestPoints.moravek(image, 100, 2, 1000);
@@ -91,7 +94,20 @@ void Application::startLab4(const char* path) {
 }
 
 void Application::startLab5(const char* path) {
+    auto imageWriter = ImageWriter();
+    auto imageReader = ImageReader();
 
+    auto image = imageReader.read(path);
+
+    auto image2 = imageReader.read(path);
+
+    image2 = Image::rotate(image2);
+
+    DescriptorFinder descriptorFinder = DescriptorFinder();
+
+    //std::vector<std::pair<Point,Point>> pointPairs = descriptorFinder.getSimilarPointsWithRotate(image,image2,40);
+
+   // imageWriter.writeWithRelationPoints("./result/mergeImagesWithRotate.jpg",image,image2,pointPairs);
 }
 
 void Application::startLab6(const char* path) {
@@ -108,6 +124,11 @@ void Application::startLab8(const char* path) {
 
 void Application::startLab9(const char* path) {
 
+}
+
+void Application::course(const char *path) {
+    SimilarImagesFinder similarImagesFinder = SimilarImagesFinder();
+    similarImagesFinder.findSimilarImages(path);
 }
 
 

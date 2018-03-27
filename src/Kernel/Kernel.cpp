@@ -36,14 +36,13 @@ Kernel Kernel::sobelY() {
 }
 
 Kernel Kernel::gauss(const double sigma, const int r) {
-    auto gauss = Kernel(r, r);
+    auto gauss = Kernel(r, 1);
     double sum = 0;
-    int R = r * r;
-    for (int i = 0; i < R; i++) {
-        gauss.kernel[i] = (1 / (sqrt(2 * M_PI) * sigma)) * exp(-(pow(i - (R / 2), 2)) / (2 * sigma * sigma));
+    for (int i = 0; i < r; i++) {
+        gauss.kernel[i] = (1.0 / (sqrt(2 * M_PI) * sigma)) * exp(-(pow(i - (r / 2), 2)) / (2 * sigma * sigma));
         sum += gauss.kernel[i];
     }
-    for (int i = 0; i < R; i++) {
+    for (int i = 0; i < r; i++) {
         gauss.setItem(i, gauss.getItem(i) / sum);
     }
     return gauss;

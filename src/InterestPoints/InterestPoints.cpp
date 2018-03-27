@@ -13,7 +13,7 @@ InterestPoints::~InterestPoints() = default;
 void InterestPoints::moravek(const Image &img, int count, int r, double threshold) {
     int width = img.getWidth();
     int height = img.getHeight();
-    std::vector<Point> angles;
+    auto imageTmp = Image(width, height);
 
     for (int i = 0; i < width; i++) {
         for (int j = 0; j < height; j++) {
@@ -35,15 +35,18 @@ void InterestPoints::moravek(const Image &img, int count, int r, double threshol
             }
             skr[4] = std::numeric_limits<double>::max();
             auto min = *std::min_element(std::begin(skr), std::end(skr));
-            angles.emplace_back(i, j, min);
+            imageTmp.setValByXY(i, j, min);
         }
     }
     std::vector<Point> anglesNorm;
-    for (int i = 0; i < angles.size(); i++) {
-        if (angles[i].intensity > threshold) {
-            anglesNorm.push_back(angles[i]);
+    for (int i = 0; i < height; i++) {
+        for (int j = 0; j < width; j++) {
+            if (imageTmp.getValBlack(j, i) > threshold) {
+                anglesNorm.emplace_back(j, i, imageTmp.getValBlack(j, i));
+            }
         }
     }
+    anglesNorm = locMax(img, anglesNorm);
     filterANMS(anglesNorm, count);
 }
 
@@ -54,31 +57,33 @@ void InterestPoints::harris(const Image &image, int count, int r, double thresho
 
     int width = image.getWidth();
     int height = image.getHeight();
-    std::vector<Point> angles;
+    auto imageTmp = Image(width, height);
     double A, B, C;
     for (int i = 0; i < width; i++) {
         for (int j = 0; j < height; j++) {
             A = B = C = 0;
             for (int u = i - r; u < i + r; u++) {
                 for (int v = j - r; v < j + r; v++) {
-                    A += imgX.getValBlack(u, v)*imgX.getValBlack(u, v);
+                    A += imgX.getValBlack(u, v) * imgX.getValBlack(u, v);
                     B += imgX.getValBlack(u, v) * imgY.getValBlack(u, v);
-                    C += imgY.getValBlack(u, v)*imgY.getValBlack(u, v);
+                    C += imgY.getValBlack(u, v) * imgY.getValBlack(u, v);
                 }
             }
             double val =
                     ((A * C - (B * B)) - (0.04 * ((A + C) * (A + C)))); //определитель-[0.04,0.06]*след^2
-                angles.emplace_back(i, j, val);
+            imageTmp.setValByXY(i, j, val);
         }
     }
 
     std::vector<Point> anglesNorm;
-    for (int i = 0; i < angles.size(); i++) {
-        if (angles[i].intensity > threshold) {
-            anglesNorm.push_back(angles[i]);
+    for (int i = 0; i < height; i++) {
+        for (int j = 0; j < width; j++) {
+            if (imageTmp.getValBlack(j, i) > threshold) {
+                anglesNorm.emplace_back(j, i, imageTmp.getValBlack(j, i));
+            }
         }
     }
-    anglesNorm = locMax(image,imgX,imgY,anglesNorm);
+    anglesNorm = locMax(image, anglesNorm);
     filterANMS(anglesNorm, count);
 }
 
@@ -92,7 +97,7 @@ void InterestPoints::filterANMS(const std::vector<Point> &angles, const int coun
                 double distX = (angles[j].x - angles[i].x);
                 double distY = (angles[j].y - angles[i].y);
                 double curDist = sqrt(distX * distX + distY * distY);
-                if (curDist < minPoint){
+                if (curDist < minPoint) {
                     minPoint = curDist;
                 }
 
@@ -101,7 +106,7 @@ void InterestPoints::filterANMS(const std::vector<Point> &angles, const int coun
         results.emplace_back(minPoint, i);
     }
     sort(results.begin(), results.end(), [](auto &first, auto &second) { return first.first > second.first; });
-    for (int i = 0; i < count && i<results.size(); ++i) {
+    for (int i = 0; i < count && i < results.size(); ++i) {
         points.push_back(angles[results[i].second]);
     }
 }
@@ -115,44 +120,17 @@ void InterestPoints::clearData() {
     points.clear();
 }
 
-bool isFirstMax(int a, int b, int c){
-    if(a>b && a>c){
-        return true;
-    }
-    return 0;
-}
-
-std::vector<Point> InterestPoints::locMax(Image image,Image imageX,Image imageY,const std::vector<Point> points){
+std::vector<Point> InterestPoints::locMax(const Image &image, const std::vector<Point> &points) {
     std::vector<Point> result;
+    int r = 5;
     for (auto point : points) {
-        double valX = imageX.getValBlack(point.x, point.y);
-        double valY = imageY.getValBlack(point.x, point.y);
-        int angl = 180.0*atan2(valY, valX)/M_PI;
-
-        if(angl>=0&&angl<45) {
-            if (!isFirstMax(image.getValBlack(point.x, point.y), image.getValBlack(point.x, point.y + 1),
-                            image.getValBlack(point.x, point.y - 1))) {
-                result.push_back(point);
+        bool max = true;
+        for (int i = -r; i < r; i++) {
+            for (int j = -r; j < r; j++) {
+                if (image.getValBlack(point.x + i, point.y + j) > point.intensity) max = false;
             }
         }
-        if(angl>=45&&angl<90) {
-            if (!isFirstMax(image.getValBlack(point.x, point.y), image.getValBlack(point.x + 1, point.y + 1),
-                            image.getValBlack(point.x - 1, point.y - 1))) {
-                result.push_back(point);
-            }
-        }
-        if(angl>=90&&angl<135) {
-            if (!isFirstMax(image.getValBlack(point.x, point.y), image.getValBlack(point.x + 1, point.y),
-                            image.getValBlack(point.x - 1, point.y))) {
-                result.push_back(point);
-            }
-        }
-        if(angl>=135) {
-            if (!isFirstMax(image.getValBlack(point.x, point.y), image.getValBlack(point.x - 1, point.y + 1),
-                            image.getValBlack(point.x + 1, point.y - 1))) {
-                result.push_back(point);
-            }
-        }
+        if (max) result.push_back(point);
     }
     return result;
 }

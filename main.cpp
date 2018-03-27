@@ -19,7 +19,7 @@ int main(int argc, char *argv[]) {
         std::cout << "Set default arguments" << std::endl;
     }
 
-    lab = lab == nullptr ? "4" : lab;  //номер лабораторной
+    lab = lab == nullptr ? "1" : lab;  //номер лабораторной
     sg = sg == nullptr ? "2" : sg;
     if(path== nullptr){
         std::cout << "path not set" << std::endl;
@@ -41,6 +41,14 @@ int main(int argc, char *argv[]) {
     if(strcmp(lab,"4")==0){
         application.startLab4("/home/tigler/picture5.jpg");
         std::cout << "Lab4 complete..." << std::endl;
+    }
+    if(strcmp(lab,"5")==0){
+        application.startLab5("/home/tigler/picture5.jpg");
+        std::cout << "Lab5 complete..." << std::endl;
+    }
+    if(strcmp(lab,"course")==0){
+        application.course("/home/tigler/");
+        std::cout << "course complete..." << std::endl;
     }
 
     return 0;

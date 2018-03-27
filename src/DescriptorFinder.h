@@ -15,11 +15,16 @@ public:
 
     std::vector<std::vector<double>> findDescriptors(const std::vector<Point> interestPoints, const Image &image);
 
+
     std::vector<std::pair<Point,Point>>
     findSimilar(const std::vector<Point> &interestPointsFirst, const std::vector<Point> &interestPointsSecond,
                                   std::vector<std::vector<double>> &descFirst, std::vector<std::vector<double>> &descSecond, int count);
 
+
     std::vector<std::pair<Point,Point>> getSimilarPoints(Image &first,Image &second,int count);
+
+
+    bool isSimilar(std::vector<std::vector<double>> first,std::vector<std::vector<double>> second);
 };
 
 

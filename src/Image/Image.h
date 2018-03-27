@@ -36,6 +36,8 @@ public:
 
     static Image cutTop(const Image &image, int countRow);
 
+    static Image rotate(const Image &image);
+
     Image separab(const Kernel &k)const;
 
     unsigned int getWidth() const;

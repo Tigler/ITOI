@@ -34,10 +34,10 @@ double Image::getValMirror(const int x, const int y) const {
 
 double Image::getValWrapp(const int x, const int y) const {
     int x0 = x, y0 = y;
-    if (x < 0) x0 = x+ width;
-    if (y < 0) y0 = y+height;
-    if (x >= width) x0 = (x - width)+1;
-    if (y >= height) y0 = (y - height)+1;
+    if (x < 0) x0 = x + width;
+    if (y < 0) y0 = y + height;
+    if (x >= width) x0 = (x - width) + 1;
+    if (y >= height) y0 = (y - height) + 1;
     return image[x0 + y0 * width];
 }
 
@@ -93,10 +93,10 @@ Image Image::mergeImages(const Image &imageLeft, const Image &imageRight) {
     auto result = Image(commonWidth, height);
     for (int i = 0; i < height; i++) {
         for (int j = 0; j < commonWidth; j++) {
-            if(j<imageLeft.getWidth()){
-                result.setValByXY(j,i,imageLeft.getValBlack(j,i));
-            }else {
-                result.setValByXY(j, i, imageRight.getValBlack(j-imageLeft.getWidth(), i));
+            if (j < imageLeft.getWidth()) {
+                result.setValByXY(j, i, imageLeft.getValBlack(j, i));
+            } else {
+                result.setValByXY(j, i, imageRight.getValBlack(j - imageLeft.getWidth(), i));
             }
         }
     }
@@ -105,10 +105,10 @@ Image Image::mergeImages(const Image &imageLeft, const Image &imageRight) {
 }
 
 Image Image::cutTop(const Image &image, int countRow) {
-    Image result = Image(image.getWidth(),(image.getHeight()-countRow));
-    for(int i=0;i<image.getHeight()-countRow;i++){
-        for(int j=0;j<image.getWidth();j++){
-            result.setValByXY(j,i,image.getValBlack(j,i+countRow));
+    Image result = Image(image.getWidth(), (image.getHeight() - countRow));
+    for (int i = 0; i < image.getHeight() - countRow; i++) {
+        for (int j = 0; j < image.getWidth(); j++) {
+            result.setValByXY(j, i, image.getValBlack(j, i + countRow));
         }
     }
     return result;
@@ -160,13 +160,27 @@ Image::Image(const Image &image) {
     this->image = image.image;
 }
 
-Image Image::separab(const Kernel &k)const {
+Image Image::separab(const Kernel &k) const {
     Kernel kernel = Kernel(k);
     Image result = this->convolution(kernel);
-    kernel.setWidth(kernel.getHeight());
     int w = kernel.getWidth();
+    kernel.setWidth(kernel.getHeight());
     kernel.setHeight(w);
     result = result.convolution(kernel);
+    return result;
+}
+
+Image Image::rotate(const Image &image) {
+    auto result = Image(image.getHeight(), image.getWidth());
+    int wOr = image.getWidth(), hOr = image.getHeight();
+    for (int x = 0; x < wOr; x++) {
+        for (int y = 0; y < hOr; y++) {
+//            result.setValByXY(wOr - x - 1,(hOr - y)/2,image.getValBlack(x,y));
+//            result.setValByXY(x,(hOr + y)/2,image.getValBlack(x,y));
+
+            result.setValByXY(x, hOr - y, image.getValBlack(x, y));
+        }
+    }
     return result;
 }
 

@@ -27,6 +27,8 @@ public:
     void startLab8(const char* path);
 
     void startLab9(const char* path);
+
+    void course(const char* path);
 };
 
 

@@ -10,14 +10,15 @@
 std::vector<std::pair<Point, Point>>
 DescriptorFinder::findSimilar(const std::vector<Point> &interestPointsFirst,
                               const std::vector<Point> &interestPointsSecond,
-                              std::vector<std::vector<double>> &descFirst, std::vector<std::vector<double>> &descSecond, int count) {
+                              std::vector<std::vector<double>> &descFirst, std::vector<std::vector<double>> &descSecond,
+                              int count) {
 
-    double treshold =0.8;
+    double treshold = 0.8;
     std::vector<std::pair<Point, Point>> pairs;
     for (int i = 0; i < descFirst.size(); i++) {
-        double min=INT32_MAX;
-        double minNeighbor=INT32_MAX;
-        int minIdx=0;
+        double min = INT32_MAX;
+        double minNeighbor = INT32_MAX;
+        int minIdx = 0;
         for (int j = 0; j < descSecond.size(); j++) {
             interestPointsSecond[j];
             double sum = 0;
@@ -25,13 +26,13 @@ DescriptorFinder::findSimilar(const std::vector<Point> &interestPointsFirst,
                 double dist = descFirst[i][k] - descSecond[j][k];
                 sum += dist * dist;
             }
-            if(min>sum){
+            if (min > sum) {
                 minNeighbor = min;
                 min = sum;
-                minIdx=j;
+                minIdx = j;
             }
         }
-        if(min/minNeighbor<treshold){
+        if (min / minNeighbor < treshold) {
             pairs.emplace_back(interestPointsFirst[i], interestPointsSecond[minIdx]);
         }
 
@@ -58,18 +59,20 @@ DescriptorFinder::findDescriptors(const std::vector<Point> interestPoints, const
                 double valY = imgY.getValBlack(ip.x + j, ip.y + k);
 
                 double valGrad = sqrt(valX * valX + valY * valY);
-                double anglMain = atan2(valY , valX);
-                double anglNeighbor = (anglMain-(((int)(anglMain/part))*part))<(part/2)?part-anglMain:part+anglMain;
+                double anglMain = atan2(valY, valX);
+                double anglNeighbor =
+                        (anglMain - (((int) (anglMain / part)) * part)) < (part / 2) ? part - anglMain : part +
+                                                                                                         anglMain;
 
-                double mainPhi = (int)(anglMain / part) * part + (part/2);
-                double neighborPhi = (int)(anglNeighbor / part) * part + (part/2);
+                double mainPhi = (int) (anglMain / part) * part + (part / 2);
+                double neighborPhi = (int) (anglNeighbor / part) * part + (part / 2);
 
-                double mainValue = abs(sqrt(anglMain * anglMain + mainPhi*mainPhi)) * valGrad;
-                double neighborValue = abs(sqrt(anglNeighbor * anglNeighbor + neighborPhi*neighborPhi)) * valGrad;
+                double mainValue = abs(sqrt(anglMain * anglMain + mainPhi * mainPhi)) * valGrad;
+                double neighborValue = abs(sqrt(anglNeighbor * anglNeighbor + neighborPhi * neighborPhi)) * valGrad;
 
 
-                int mainIdx = (int)(anglMain / part)*(j+r)/(r/barChars);
-                int neighborIdx = (int)(anglNeighbor / part)*(j+r)/(r/barChars);
+                int mainIdx = (int) (anglMain / part) * (j + r) / (r / barChars);
+                int neighborIdx = (int) (anglNeighbor / part) * (j + r) / (r / barChars);
 
                 if (mainIdx < 0) mainIdx = 0;
                 if (mainIdx > descriptor.size() - 1) mainIdx = descriptor.size() - 1;
@@ -92,7 +95,8 @@ DescriptorFinder::findDescriptors(const std::vector<Point> interestPoints, const
 
 }
 
-std::vector<std::pair<Point, Point>> DescriptorFinder::getSimilarPoints(Image &first, Image &second,int count) {
+
+std::vector<std::pair<Point, Point>> DescriptorFinder::getSimilarPoints(Image &first, Image &second, int count) {
     auto interestPoints = InterestPoints();
 
     interestPoints.moravek(first, count, 4, 1000);
@@ -113,11 +117,18 @@ std::vector<std::pair<Point, Point>> DescriptorFinder::getSimilarPoints(Image &f
 std::vector<double> DescriptorFinder::normalize(std::vector<double> descriptor) {
     double sum = 0;
     for (double &item : descriptor) {
-        sum += item*item;
+        sum += item * item;
     }
-    sum=sqrt(sum);
+    sum = sqrt(sum);
     for (double &item : descriptor) {
         item = item / sum;
     }
     return descriptor;
 }
+
+bool DescriptorFinder::isSimilar(std::vector<std::vector<double>> first, std::vector<std::vector<double>> second) {
+    return false;
+}
+
+
+

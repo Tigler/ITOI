@@ -52,7 +52,7 @@ public:
 
     const std::vector<Point> &getPoints() const;
 
-    std::vector<Point> locMax(Image image,Image imageX,Image imageY,const std::vector<Point> points);
+    std::vector<Point> locMax(const Image &image,const std::vector<Point> &points);
 
     void clearData();
 

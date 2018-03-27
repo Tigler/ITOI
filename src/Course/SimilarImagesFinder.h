@@ -6,8 +6,14 @@
 #define ITOI_SIMILARIMAGESFINDER_H
 
 
-class SimilarImagesFinder {
+#include <vector>
 
+class SimilarImagesFinder {
+    std::vector<std::vector<std::pair<std::vector<std::vector<double>>,const char *>>> different;
+public:
+    void findSimilarImages(const char *path);
+
+    void distribute(const char *path);
 };
 
 

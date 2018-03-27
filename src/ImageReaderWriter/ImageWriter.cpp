@@ -97,11 +97,11 @@ void ImageWriter::writeWithPoints(const char *path, Image image, std::vector<Poi
         imageForOut[points[i].y * image.getWidth() * 3 + points[i].x * 3] = 255;
         imageForOut[points[i].y * image.getWidth() * 3 + points[i].x * 3 + 1] = 0;
         imageForOut[points[i].y * image.getWidth() * 3 + points[i].x * 3 + 2] = 0;
-        for (int t = (-(int)image.getWidth() / 300); t <(int)image.getWidth() / 300; t++) {
-            for (int j = -((int)image.getWidth() / 100); j < (int)image.getWidth() / 100; j += 3) {
-                imageForOut[(points[i].y+t) * image.getWidth() * 3 + points[i].x * 3 + j] = 255;
-                imageForOut[(points[i].y+t) * image.getWidth() * 3 + points[i].x * 3 + j + 1] = 0;
-                imageForOut[(points[i].y+t) * image.getWidth() * 3 + points[i].x * 3 + j + 2] = 0;
+        for (int t = (-(int) image.getWidth() / 300); t < (int) image.getWidth() / 300; t++) {
+            for (int j = -((int) image.getWidth() / 100); j < (int) image.getWidth() / 100; j += 3) {
+                imageForOut[(points[i].y + t) * image.getWidth() * 3 + points[i].x * 3 + j] = 255;
+                imageForOut[(points[i].y + t) * image.getWidth() * 3 + points[i].x * 3 + j + 1] = 0;
+                imageForOut[(points[i].y + t) * image.getWidth() * 3 + points[i].x * 3 + j + 2] = 0;
             }
         }
     }
@@ -117,9 +117,10 @@ void ImageWriter::writeWithPoints(const char *path, Image image, std::vector<Poi
 }
 
 
-void ImageWriter::writeWithRelationPoints(const char *path, Image imageLeft,Image imageRight, std::vector<std::pair<Point,Point>> pointPairs) {
+void ImageWriter::writeWithRelationPoints(const char *path, Image imageLeft, Image imageRight,
+                                          std::vector<std::pair<Point, Point>> pointPairs) {
 
-    auto image = Image::mergeImages(imageLeft,imageRight);
+    auto image = Image::mergeImages(imageLeft, imageRight);
     struct jpeg_compress_struct cinfo;
     struct jpeg_error_mgr jerr;
 
@@ -157,47 +158,61 @@ void ImageWriter::writeWithRelationPoints(const char *path, Image imageLeft,Imag
     }
 
     for (int i = 0; i < pointPairs.size(); i++) {
-        imageForOut[pointPairs[i].first.y * image.getWidth() * 3 + pointPairs[i].first.x * 3] = 255;
-        imageForOut[pointPairs[i].first.y * image.getWidth() * 3 + pointPairs[i].first.x * 3 + 1] = 0;
-        imageForOut[pointPairs[i].first.y * image.getWidth() * 3 + pointPairs[i].first.x * 3 + 2] = 0;
-        for (int t = (-(int)image.getWidth() / 300); t <(int)image.getWidth() / 300; t++) {
-            for (int j = -((int)image.getWidth() / 100); j < (int)image.getWidth() / 100; j += 3) {
-                imageForOut[(pointPairs[i].first.y+t) * image.getWidth() * 3 + pointPairs[i].first.x * 3 + j] = 255;
-                imageForOut[(pointPairs[i].first.y+t) * image.getWidth() * 3 + pointPairs[i].first.x * 3 + j + 1] = 0;
-                imageForOut[(pointPairs[i].first.y+t) * image.getWidth() * 3 + pointPairs[i].first.x * 3 + j + 2] = 0;
-            }
+        if (pointPairs[i].first.y < image.getHeight() && pointPairs[i].first.x < image.getWidth()) {
+            imageForOut[pointPairs[i].first.y * image.getWidth() * 3 + pointPairs[i].first.x * 3] = 255;
+            imageForOut[pointPairs[i].first.y * image.getWidth() * 3 + pointPairs[i].first.x * 3 + 1] = 0;
+            imageForOut[pointPairs[i].first.y * image.getWidth() * 3 + pointPairs[i].first.x * 3 + 2] = 0;
+//            for (int t = (-(int) image.getWidth() / 300); t < (int) image.getWidth() / 300; t++) {
+//                for (int j = -((int) image.getWidth() / 100); j < (int) image.getWidth() / 100; j += 3) {
+//                    imageForOut[(pointPairs[i].first.y + t) * image.getWidth() * 3 + pointPairs[i].first.x * 3 +
+//                                j] = 255;
+//                    imageForOut[(pointPairs[i].first.y + t) * image.getWidth() * 3 + pointPairs[i].first.x * 3 + j +
+//                                1] = 0;
+//                    imageForOut[(pointPairs[i].first.y + t) * image.getWidth() * 3 + pointPairs[i].first.x * 3 + j +
+//                                2] = 0;
+//                }
+//            }
         }
     }
 
 
     for (int i = 0; i < pointPairs.size(); i++) {
-        imageForOut[pointPairs[i].second.y * image.getWidth() * 3 + (pointPairs[i].second.x+imageLeft.getWidth()) * 3] = 255;
-        imageForOut[pointPairs[i].second.y * image.getWidth() * 3 + (pointPairs[i].second.x+imageLeft.getWidth()) * 3 + 1] = 0;
-        imageForOut[pointPairs[i].second.y * image.getWidth() * 3 + (pointPairs[i].second.x+imageLeft.getWidth()) * 3 + 2] = 0;
-        for (int t = (-(int)image.getWidth() / 300); t <(int)image.getWidth() / 300; t++) {
-            for (int j = -((int)image.getWidth() / 100); j < (int)image.getWidth() / 100; j += 3) {
-                imageForOut[(pointPairs[i].second.y+t) * image.getWidth() * 3 + (pointPairs[i].second.x+imageLeft.getWidth()) * 3 + j] = 255;
-                imageForOut[(pointPairs[i].second.y+t) * image.getWidth() * 3 + (pointPairs[i].second.x+imageLeft.getWidth()) * 3 + j + 1] = 0;
-                imageForOut[(pointPairs[i].second.y+t) * image.getWidth() * 3 + (pointPairs[i].second.x+imageLeft.getWidth()) * 3 + j + 2] = 0;
-            }
+        if (pointPairs[i].second.y < image.getHeight() && pointPairs[i].second.x < image.getWidth()) {
+            imageForOut[pointPairs[i].second.y * image.getWidth() * 3 +
+                        (pointPairs[i].second.x + imageLeft.getWidth()) * 3] = 255;
+            imageForOut[pointPairs[i].second.y * image.getWidth() * 3 +
+                        (pointPairs[i].second.x + imageLeft.getWidth()) * 3 + 1] = 0;
+            imageForOut[pointPairs[i].second.y * image.getWidth() * 3 +
+                        (pointPairs[i].second.x + imageLeft.getWidth()) * 3 + 2] = 0;
+//            for (int t = (-(int) image.getWidth() / 300); t < (int) image.getWidth() / 300; t++) {
+//                for (int j = -((int) image.getWidth() / 100); j < (int) image.getWidth() / 100; j += 3) {
+//                    imageForOut[(pointPairs[i].second.y + t) * image.getWidth() * 3 +
+//                                (pointPairs[i].second.x + imageLeft.getWidth()) * 3 + j] = 255;
+//                    imageForOut[(pointPairs[i].second.y + t) * image.getWidth() * 3 +
+//                                (pointPairs[i].second.x + imageLeft.getWidth()) * 3 + j + 1] = 0;
+//                    imageForOut[(pointPairs[i].second.y + t) * image.getWidth() * 3 +
+//                                (pointPairs[i].second.x + imageLeft.getWidth()) * 3 + j + 2] = 0;
+//                }
+//            }
         }
     }
 
 
-    for(int i=0;i<pointPairs.size();i++){
-        for(int j=pointPairs[i].first.x;j<pointPairs[i].second.x+imageLeft.getWidth();j++) {
-            int y = ((int)j*((int)pointPairs[i].second.y-(int)pointPairs[i].first.y) - (int)pointPairs[i].first.x*((int)pointPairs[i].second.y-(int)pointPairs[i].first.y) +
-                     (int)pointPairs[i].first.y*(((int)pointPairs[i].second.x+(int)imageLeft.getWidth())-(int)pointPairs[i].first.x))/(((int)pointPairs[i].second.x+(int)imageLeft.getWidth())-(int)pointPairs[i].first.x);
-            if(y<0)y=y*(-1);
-            if(y<image.getHeight()) {
+    for (int i = 0; i < pointPairs.size(); i++) {
+        for (int j = pointPairs[i].first.x; j < pointPairs[i].second.x + imageLeft.getWidth(); j++) {
+            int y = ((int) j * ((int) pointPairs[i].second.y - (int) pointPairs[i].first.y) -
+                     (int) pointPairs[i].first.x * ((int) pointPairs[i].second.y - (int) pointPairs[i].first.y) +
+                     (int) pointPairs[i].first.y *
+                     (((int) pointPairs[i].second.x + (int) imageLeft.getWidth()) - (int) pointPairs[i].first.x)) /
+                    (((int) pointPairs[i].second.x + (int) imageLeft.getWidth()) - (int) pointPairs[i].first.x);
+            if (y < 0)y = y * (-1);
+            if (y < image.getHeight() && (y * image.getWidth() * 3 + j * 3)<image.getHeight()*image.getWidth() * 3) {
                 imageForOut[y * image.getWidth() * 3 + j * 3] = 255;
                 imageForOut[y * image.getWidth() * 3 + j * 3 + 1] = 0;
                 imageForOut[y * image.getWidth() * 3 + j * 3 + 2] = 0;
             }
         }
     }
-
-
 
 
     while (cinfo.next_scanline < cinfo.image_height) {
