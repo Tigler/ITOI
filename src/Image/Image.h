@@ -38,6 +38,21 @@ public:
 
     static Image rotate(const Image &image);
 
+    static bool sizeEq(Image &img1, Image &img2){
+        return img1.width == img2.width && img1.height == img1.height;
+    }
+
+    Image operator-(const Image &right) const {
+        //Q_ASSERT(this->width == right.width && this->height == right.height);
+        Image result = Image(this->width, this->height);
+        for (int i = 0; i < this->width; i++) {
+            for (int j = 0; j < this->height; j++) {
+                result.setValByXY(i, j, this->getValBlack(i,j) - right.getValBlack(i,j));
+            }
+        }
+        return result;
+    }
+
     Image separab(const Kernel &k)const;
 
     unsigned int getWidth() const;

@@ -25,12 +25,6 @@ public:
         this->y = y;
         this->intensity = intensity;
     };
-
-    Point(int x, int y, int z, double intensity) {
-        this->x = x;
-        this->y = y;
-        this->intensity = intensity;
-    };
 };
 
 class InterestPoints {

@@ -4,6 +4,7 @@
 
 #include <algorithm>
 #include <cmath>
+#include <iostream>
 #include "InterestPoints.h"
 
 InterestPoints::InterestPoints() = default;
@@ -134,5 +135,3 @@ std::vector<Point> InterestPoints::locMax(const Image &image, const std::vector<
     }
     return result;
 }
-
-

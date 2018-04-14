@@ -49,6 +49,8 @@ double Image::getValBlack(const int x, const int y) const {
 }
 
 
+
+
 void Image::setValByXY(const int x, const int y, const double c) {
     if (x < 0 || x > width || y < 0 || y > height) return;
     image[x + y * width] = c;
@@ -173,12 +175,17 @@ Image Image::separab(const Kernel &k) const {
 Image Image::rotate(const Image &image) {
     auto result = Image(image.getHeight(), image.getWidth());
     int wOr = image.getWidth(), hOr = image.getHeight();
-    for (int x = 0; x < wOr; x++) {
-        for (int y = 0; y < hOr; y++) {
-//            result.setValByXY(wOr - x - 1,(hOr - y)/2,image.getValBlack(x,y));
-//            result.setValByXY(x,(hOr + y)/2,image.getValBlack(x,y));
-
-            result.setValByXY(x, hOr - y, image.getValBlack(x, y));
+//    for (int x = 0; x < wOr; x++) {
+//        for (int y = 0; y < hOr; y++) {
+////            result.setValByXY(wOr - x - 1,(hOr - y)/2,image.getValBlack(x,y));
+////            result.setValByXY(x,(hOr + y)/2,image.getValBlack(x,y));
+//
+//            result.setValByXY(x, hOr - y, image.getValBlack(x, y));
+//        }
+//    }
+    for (int i = 0; i < image.getWidth(); i++) {
+        for (int j = 0; j < image.getHeight(); j++) {
+            result.setValByXY(image.getHeight()-1-j, i, image.getValBlack(i,j));
         }
     }
     return result;

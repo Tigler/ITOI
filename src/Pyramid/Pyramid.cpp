@@ -14,7 +14,7 @@ void Pyramid::create(const Image &img, const int countOctaves, const int scales,
         double sigmaCur = sigma0;
         for (int i = 0; i < scales; i++) {
             double sigmaPrev = sigmaCur;
-            sigmaCur = sigma0 * pow(interval, i);
+            sigmaCur = sigma0 * pow(interval, i+1);
             image = image.separab(Kernel::gauss(sqrt(sigmaCur * sigmaCur - sigmaPrev * sigmaPrev)));
             pyramidInfo.emplace_back(image, countOctaves - octave, sigmaCur, i);
         }

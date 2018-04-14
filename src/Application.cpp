@@ -17,7 +17,7 @@ void Application::startLab1(const char* path, double sg) {
     auto imageReader = ImageReader();
     auto image = imageReader.read(path);
 
-    auto img = image.sobel();
+    auto  img = image.convolution(Kernel::sobelX());
     imageWriter.write("./result/sobel.jpg",img);
 
     auto img2 = image.convolution(Kernel::gauss(sg));
@@ -30,7 +30,7 @@ void Application::startLab2(const char* path) {
     auto image = imageReader.read(path);
 
     auto pyramid = Pyramid();
-    pyramid.create(image,5,4,0.5,1.3);
+    pyramid.create(image,5,4,0.5,1.4);
 
     auto count = pyramid.getCount();
 
@@ -62,16 +62,14 @@ void Application::startLab3(const char* path) {
 
     auto image = imageReader.read(path);
 
-    image = Image::rotate(image);
-
     auto interestPoints = InterestPoints();
 
-    interestPoints.moravek(image, 100, 2, 1000);
+    interestPoints.moravek(image, 50, 2, 1000);
     imageWriter.writeWithPoints("./result/morawekk.jpg",image,interestPoints.getPoints());
 
     interestPoints.clearData();
 
-    interestPoints.harris(image, 100, 2, 115557500000);//
+    interestPoints.harris(image, 20, 2, 1115557500000);//
     imageWriter.writeWithPoints("./result/harris.jpg",image,interestPoints.getPoints());
 }
 
@@ -102,12 +100,14 @@ void Application::startLab5(const char* path) {
     auto image2 = imageReader.read(path);
 
     image2 = Image::rotate(image2);
+    image2 = Image::rotate(image2);
 
     DescriptorFinder descriptorFinder = DescriptorFinder();
 
-    //std::vector<std::pair<Point,Point>> pointPairs = descriptorFinder.getSimilarPointsWithRotate(image,image2,40);
+    std::vector<std::pair<Point,Point>> pointPairs = descriptorFinder.getSimilarPointsWithRotate(image,image2,40);
 
-   // imageWriter.writeWithRelationPoints("./result/mergeImagesWithRotate.jpg",image,image2,pointPairs);
+
+    imageWriter.writeWithRelationPoints("./result/mergeImagesWithRotate.jpg",image,image2,pointPairs);
 }
 
 void Application::startLab6(const char* path) {
