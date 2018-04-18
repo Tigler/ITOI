@@ -14,3 +14,8 @@ find_package(JPEG REQUIRED)
 include_directories(  ${JPEG_INCLUDE_DIRS} )
 
 target_link_libraries( ITOI ${JPEG_LIBRARY} )
+
+#find_package(OpenCV REQUIRED)
+#
+#include_directories(${OpenCV_INCLUDE_DIRS})
+#target_link_libraries(ITOI ${OpenCV_LIBS})

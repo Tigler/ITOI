@@ -19,7 +19,7 @@ public:
     findSimilar(const std::vector<Point> &interestPointsFirst, const std::vector<Point> &interestPointsSecond,
                                   std::vector<std::vector<double>> &descFirst, std::vector<std::vector<double>> &descSecond, int count);
 
-    double orientation(const Image &imgX,const Image &imgY,const Point &ip,const int r);
+    std::vector<double> orientation(const Image &imgX,const Image &imgY,const Point &ip,const int r);
 
     std::vector<std::pair<Point,Point>> getSimilarPoints(Image &first,Image &second,int count);
 

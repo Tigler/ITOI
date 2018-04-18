@@ -129,6 +129,7 @@ void Application::startLab9(const char* path) {
 void Application::course(const char *path) {
     SimilarImagesFinder similarImagesFinder = SimilarImagesFinder();
     similarImagesFinder.findSimilarImages(path);
+
 }
 
 
