@@ -28,7 +28,7 @@ public:
 
     void startLab9(const char* path);
 
-    void course(const char* path);
+    void course(const char *pathOriginal,const char *dir,const int N,const int D);
 };
 
 

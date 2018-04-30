@@ -106,7 +106,7 @@ void InterestPoints::filterANMS(const std::vector<Point> &angles, const int coun
         }
         results.emplace_back(minPoint, i);
     }
-    sort(results.begin(), results.end(), [](auto &first, auto &second) { return first.first > second.first; });
+    //sort(results.begin(), results.end(), [](auto &first, auto &second) { return first.first > second.first; });
     for (int i = 0; i < count && i < results.size(); ++i) {
         points.push_back(angles[results[i].second]);
     }

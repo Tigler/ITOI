@@ -126,10 +126,12 @@ void Application::startLab9(const char* path) {
 
 }
 
-void Application::course(const char *path) {
-    SimilarImagesFinder similarImagesFinder = SimilarImagesFinder();
-    similarImagesFinder.findSimilarImages(path);
-
+void Application::course(const char *pathOriginal,const char *dir,const int N,const int D) {
+    SimilarImagesFinder similarImagesFinder = SimilarImagesFinder(N,D);
+    similarImagesFinder.calculateDiscOriginal(pathOriginal);
+    printf("Original: ");printf(pathOriginal);printf("\n");
+    printf("Similars: ");printf("\n");
+    similarImagesFinder.findSimilarImages(dir);
 }
 
 
